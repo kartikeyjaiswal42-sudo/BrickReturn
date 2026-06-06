@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How BrickReturn™ Works — The Full Mechanism</title>
+<meta name="description" content="The complete working of BrickReturn™ — corpus, arbitrage, yield engine, rebate, and risk safeguards, explained step by step." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">B</span>
+      <span class="logo-text">BrickReturn<sup>™</sup></span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#problem">The Problem</a>
+      <a href="how-it-works.html" class="active">How It Works</a>
+      <a href="index.html#math">The Math</a>
+      <a href="index.html#properties">Properties</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hiw-hero">
+  <div class="container hiw-hero-inner">
+    <span class="badge">Working &middot; Mechanism &middot; Money Flow</span>
+    <h1>How BrickReturn<sup>™</sup> actually works.</h1>
+    <p class="hiw-lede">The full mechanism — from the first investor rupee to the last monthly rebate — explained without jargon. Read top to bottom, or jump to a section.</p>
+
+    <div class="hiw-toc">
+      <a href="#core">1. The Core Idea</a>
+      <a href="#flow">2. Money Flow</a>
+      <a href="#players">3. The Four Players</a>
+      <a href="#steps">4. The Six Steps</a>
+      <a href="#math">5. Why The Math Works</a>
+      <a href="#safety">6. Risk & Safeguards</a>
+      <a href="#scenarios">7. What If Things Go Wrong</a>
+      <a href="#example">8. End-to-End Example</a>
+    </div>
+  </div>
+</section>
+
+<!-- 1. CORE IDEA -->
+<section id="core" class="hiw-section">
+  <div class="container hiw-narrow">
+    <span class="eyebrow">1. The Core Idea</span>
+    <h2>Use the transaction itself to fund the transaction.</h2>
+    <p>Every time a developer sells a home in bulk to a wholesale buyer, they discount the price by 15–25%. That discount has always existed — but only large institutions could capture it. Individual homebuyers, the people who actually live in the homes, never see a paisa of it.</p>
+    <p>BrickReturn™ does one thing: it aggregates buyers into a wholesale block, captures the bulk discount, then <strong>routes that discount — plus disciplined market yield on a recycling corpus — back to the homebuyer as a monthly rebate</strong>. The buyer's bank EMI stays exactly the same. Their <em>net outflow</em> shrinks every year.</p>
+    <div class="hiw-callout">
+      <div class="hiw-callout-mark">"</div>
+      <p>The arbitrage between wholesale and retail pricing in Indian residential real estate is real, documented, and routine. The innovation isn't creating it — it's redirecting it to the person bearing the EMI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. MONEY FLOW DIAGRAM -->
+<section id="flow" class="hiw-section hiw-section-alt">
+  <div class="container">
+    <span class="eyebrow">2. The Money Flow</span>
+    <h2>Follow the rupee.</h2>
+    <p class="hiw-lede-small">Every arrow below represents a real cash movement. Nothing is synthetic.</p>
+
+    <div class="flow-diagram">
+      <div class="flow-node flow-node-investor">
+        <div class="flow-tag">INVESTOR</div>
+        <h4>Seed Capital</h4>
+        <div class="flow-amount">₹40 L</div>
+        <p>committed per unit, 15-year lock-in, earns 8.5% p.a. guaranteed coupon</p>
+      </div>
+
+      <div class="flow-arrow flow-arrow-down">↓</div>
+
+      <div class="flow-node flow-node-br">
+        <div class="flow-tag">BRICKRETURN™</div>
+        <h4>Pools Capital + Aggregates Demand</h4>
+        <p>Holds investor seed. Identifies homebuyer cohorts. Approaches developers as a bulk wholesale buyer.</p>
+      </div>
+
+      <div class="flow-arrow flow-arrow-down">↓</div>
+
+      <div class="flow-node flow-node-dev">
+        <div class="flow-tag">DEVELOPER</div>
+        <h4>Wholesale Sale</h4>
+        <div class="flow-amount">₹80 L per unit</div>
+        <p>sells at ~20% below retail price for guaranteed bulk offtake — the standard wholesale discount they already give institutional buyers</p>
+      </div>
+
+      <div class="flow-arrow flow-arrow-down">↓</div>
+
+      <div class="flow-node flow-node-br">
+        <div class="flow-tag">BRICKRETURN™</div>
+        <h4>Retail Resale at Market Price</h4>
+        <div class="flow-amount">₹1.00 Cr per unit</div>
+        <p>sells to individual homebuyer at full market price. Buyer takes a standard bank home loan. <strong>Day-1 arbitrage profit: ₹20 L</strong>.</p>
+      </div>
+
+      <div class="flow-arrow flow-arrow-down">↓</div>
+
+      <div class="flow-node flow-node-corpus">
+        <div class="flow-tag">RECYCLING CORPUS</div>
+        <h4>Total Investable Pool</h4>
+        <div class="flow-amount">₹1.40 Cr per transaction</div>
+        <p>= ₹1.00 Cr sale proceeds + ₹40 L original seed capital. Invested across index funds, flexi-cap MFs, and sovereign gold bonds.</p>
+      </div>
+
+      <div class="flow-split">
+        <div class="flow-arrow-diag flow-arrow-left">↙</div>
+        <div class="flow-arrow-diag flow-arrow-right">↘</div>
+      </div>
+
+      <div class="flow-bottom">
+        <div class="flow-node flow-node-buyer">
+          <div class="flow-tag">HOMEBUYER</div>
+          <h4>Monthly Rebate</h4>
+          <p>~2.5% of annual corpus yield paid monthly. Year 1: ₹20,833. Year 12: ₹63,000.</p>
+        </div>
+        <div class="flow-node flow-node-investor-small">
+          <div class="flow-tag">INVESTOR + BR™</div>
+          <h4>Coupon + Margin</h4>
+          <p>Investor receives 8.5% guaranteed coupon. BrickReturn™ retains surplus as management fee.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. THE FOUR PLAYERS -->
+<section id="players" class="hiw-section">
+  <div class="container">
+    <span class="eyebrow">3. The Four Players</span>
+    <h2>Who puts in what, and who gets what back.</h2>
+
+    <div class="players-grid">
+      <div class="player-card">
+        <div class="player-num">1</div>
+        <h3>The Investor</h3>
+        <p class="player-role">Provides the seed capital.</p>
+        <div class="player-puts">
+          <span>PUTS IN</span>
+          <strong>₹40 L per unit · 15-year lock-in</strong>
+        </div>
+        <div class="player-gets">
+          <span>GETS BACK</span>
+          <strong>8.5% p.a. guaranteed coupon · asset-backed</strong>
+        </div>
+        <p class="player-why">Why they participate: predictable, debt-like returns secured against real estate inventory and a diversified portfolio — better than fixed deposits, lower volatility than equity.</p>
+      </div>
+
+      <div class="player-card">
+        <div class="player-num">2</div>
+        <h3>The Developer</h3>
+        <p class="player-role">Sells inventory in bulk.</p>
+        <div class="player-puts">
+          <span>GIVES UP</span>
+          <strong>~20% off retail price on each unit</strong>
+        </div>
+        <div class="player-gets">
+          <span>IN EXCHANGE</span>
+          <strong>guaranteed bulk offtake · zero marketing cost · upfront cash flow</strong>
+        </div>
+        <p class="player-why">Why they participate: developers already do this for institutional buyers. BrickReturn™ is just another wholesale channel — but a more reliable one.</p>
+      </div>
+
+      <div class="player-card player-card-featured">
+        <div class="player-num">3</div>
+        <h3>BrickReturn™</h3>
+        <p class="player-role">The aggregator and corpus manager.</p>
+        <div class="player-puts">
+          <span>PROVIDES</span>
+          <strong>buyer aggregation · corpus management · risk architecture</strong>
+        </div>
+        <div class="player-gets">
+          <span>EARNS</span>
+          <strong>Day-1 arbitrage margin + recurring AUM fee</strong>
+        </div>
+        <p class="player-why">Why the model needs them: nobody else in the chain has the incentive or capability to do this. Banks lend, developers build, buyers buy. The aggregation layer doesn't exist today.</p>
+      </div>
+
+      <div class="player-card">
+        <div class="player-num">4</div>
+        <h3>The Homebuyer</h3>
+        <p class="player-role">The reason the whole thing exists.</p>
+        <div class="player-puts">
+          <span>PAYS</span>
+          <strong>full market price · standard 9% bank loan over 12 yrs</strong>
+        </div>
+        <div class="player-gets">
+          <span>RECEIVES</span>
+          <strong>monthly rebate that grows every year · up to 53% net EMI relief by year 12</strong>
+        </div>
+        <p class="player-why">Why this matters: for the first time, the wholesale-retail spread on their own home actually benefits them — instead of an institutional buyer flipping the unit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. THE SIX STEPS -->
+<section id="steps" class="hiw-section hiw-section-alt">
+  <div class="container">
+    <span class="eyebrow">4. The Six Steps</span>
+    <h2>Walked through, end to end.</h2>
+
+    <div class="steps-detailed">
+      <article class="step-d">
+        <div class="step-d-num">Step 1</div>
+        <h3>Corpus Assembly</h3>
+        <p>Institutional investors commit ₹40 lakh per unit into a managed corpus, with a 15-year lock-in and a contractual 8.5% p.a. coupon. The corpus is held by BrickReturn™ acting as fund manager. This is debt-style capital — the investor doesn't share upside or downside of the property; they earn a fixed yield.</p>
+        <div class="step-d-key"><strong>Key point:</strong> investor capital is not at-risk against any individual unit. It's deployed against the diversified portfolio in Step 5.</div>
+      </article>
+
+      <article class="step-d">
+        <div class="step-d-num">Step 2</div>
+        <h3>Bulk Acquisition</h3>
+        <p>BrickReturn™ approaches a developer with a commitment to purchase ≥20 units in a single project. In exchange for guaranteed bulk offtake and accelerated cash flow, the developer offers a 15–25% discount on retail pricing. A ₹1 crore unit is acquired for ~₹80 lakh.</p>
+        <div class="step-d-key"><strong>Why this discount is real:</strong> developers pay 6–8% in marketing, brokerage, and carrying cost per retail unit. A bulk sale eliminates almost all of it. The 20% discount is roughly their saved cost plus a cash-flow premium.</div>
+      </article>
+
+      <article class="step-d">
+        <div class="step-d-num">Step 3</div>
+        <h3>Retail Sale at Market Price</h3>
+        <p>BrickReturn™ resells each unit to an individual homebuyer at the prevailing retail market price (₹1 crore). The buyer takes a standard home loan from a standard bank at standard rates. Nothing about their borrowing experience changes.</p>
+        <div class="step-d-key"><strong>Day-1 outcome:</strong> ₹20 lakh of pure arbitrage profit per unit. This is captured by BrickReturn™ and flows into the recycling corpus.</div>
+      </article>
+
+      <article class="step-d">
+        <div class="step-d-num">Step 4</div>
+        <h3>Corpus Expansion</h3>
+        <p>Per transaction, the investable pool grows to ₹1.40 crore: ₹1 crore from the retail sale + ₹40 lakh original investor seed. This is the engine that funds the rebate stream for the entire 12-year buyer tenure.</p>
+        <div class="step-d-key"><strong>Scaling effect:</strong> every additional unit sold adds another ₹1.40 crore to the corpus. The model compounds.</div>
+      </article>
+
+      <article class="step-d">
+        <div class="step-d-num">Step 5</div>
+        <h3>Yield Engine Deployment</h3>
+        <p>The corpus is deployed across a disciplined three-asset allocation, targeting a blended <strong>10–11% annual return</strong>:</p>
+        <ul class="alloc-detail">
+          <li><span class="alloc-pct">50%</span><span><strong>Index Funds (Nifty 50 / Next 50)</strong> — historical 11-13% — broad-market equity exposure</span></li>
+          <li><span class="alloc-pct">30%</span><span><strong>Flexi-Cap Mutual Funds</strong> — historical 9-10% — diversified active equity</span></li>
+          <li><span class="alloc-pct">20%</span><span><strong>Sovereign Gold Bonds / ETF</strong> — historical 6-9% — inflation hedge, low correlation</span></li>
+        </ul>
+        <div class="step-d-key"><strong>Why this mix:</strong> equity-heavy enough to generate the yield, diversified enough to survive a single bad year, and gold-backed for tail-risk protection.</div>
+      </article>
+
+      <article class="step-d">
+        <div class="step-d-num">Step 6</div>
+        <h3>Rebate Distribution</h3>
+        <p>Approximately 2.5% of the annual corpus yield is paid monthly to the homebuyer as a rebate, credited directly to their account. The rest of the yield services the investor coupon (8.5%) and BrickReturn™'s management margin.</p>
+        <div class="step-d-key"><strong>Critical design choice:</strong> the rebate amount is <em>performance-linked</em>. If markets underperform in any given year, the rebate proportionally shrinks. BrickReturn™ never subsidises a shortfall from reserves.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 5. WHY THE MATH WORKS -->
+<section id="math" class="hiw-section">
+  <div class="container hiw-narrow">
+    <span class="eyebrow">5. Why The Math Works</span>
+    <h2>The numbers, sanity-checked.</h2>
+    <p>The cleanest test of any financial model is whether the cash flows balance over the full horizon. Here's the back-of-envelope:</p>
+
+    <div class="math-box">
+      <h4>Per-unit economics (₹1 Cr property, 12-yr buyer tenure)</h4>
+      <table class="hiw-math-table">
+        <tr><td>Investor seed</td><td class="r">+ ₹40 L</td></tr>
+        <tr><td>Retail sale proceeds</td><td class="r">+ ₹100 L</td></tr>
+        <tr><td>Bulk acquisition cost</td><td class="r">− ₹80 L</td></tr>
+        <tr class="hl"><td><strong>Net corpus available</strong></td><td class="r"><strong>₹60 L deployable + ₹80 L recycled</strong></td></tr>
+        <tr><td colspan="2" class="hiw-math-note">(₹80 L recycled through Step 2 cycle; ₹60 L = Day-1 arbitrage + investor seed earning yield)</td></tr>
+      </table>
+
+      <h4 style="margin-top:32px;">12-year obligations</h4>
+      <table class="hiw-math-table">
+        <tr><td>Investor coupon @ 8.5% × 12 yrs × ₹40 L</td><td class="r">~₹52 L total</td></tr>
+        <tr><td>Buyer rebate (cumulative)</td><td class="r">~₹34.5 L total</td></tr>
+        <tr><td>BrickReturn™ management fee</td><td class="r">~₹8-12 L total</td></tr>
+        <tr class="hl"><td><strong>Total outflows</strong></td><td class="r"><strong>~₹95-99 L</strong></td></tr>
+      </table>
+
+      <h4 style="margin-top:32px;">12-year corpus generation</h4>
+      <table class="hiw-math-table">
+        <tr><td>₹140 L corpus × 10.5% blended return × 12 yrs (compounded)</td><td class="r">~₹325 L grown corpus</td></tr>
+        <tr><td>Yield generated</td><td class="r">~₹185 L</td></tr>
+        <tr class="hl"><td><strong>Margin of safety</strong></td><td class="r text-good"><strong>~₹85-90 L cushion</strong></td></tr>
+      </table>
+    </div>
+
+    <p class="hiw-math-conclusion">The model has roughly <strong>85% headroom</strong> over its stated obligations — that's the buffer that absorbs market underperformance years.</p>
+  </div>
+</section>
+
+<!-- 6. RISK & SAFEGUARDS -->
+<section id="safety" class="hiw-section hiw-section-alt">
+  <div class="container">
+    <span class="eyebrow">6. Risk Architecture & Safeguards</span>
+    <h2>The four design choices that keep this honest.</h2>
+
+    <div class="safety-grid">
+      <div class="safety-item">
+        <h4>1. Performance-linked rebates</h4>
+        <p>If portfolio returns drop in a given year, buyer rebates shrink proportionally. Never funded from reserves, new investor money, or future cash flow. The model can't ever owe more than it earned.</p>
+      </div>
+      <div class="safety-item">
+        <h4>2. No Ponzi dynamics</h4>
+        <p>Each transaction is self-contained: one buyer, one bank loan, one investor stake, one corpus contribution. New buyers are not used to pay old buyers. The system doesn't require growth to survive.</p>
+      </div>
+      <div class="safety-item">
+        <h4>3. Asset-backed investor capital</h4>
+        <p>Investor seed is secured against physical inventory (during the holding phase) and a publicly-traded diversified portfolio (during the operating phase). No speculative collateral.</p>
+      </div>
+      <div class="safety-item">
+        <h4>4. Transparent reporting</h4>
+        <p>Buyers and investors receive monthly statements: portfolio NAV, yield earned, rebate disbursed, fees deducted. Every number is auditable. The math is open, not opaque.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. WHAT IF -->
+<section id="scenarios" class="hiw-section">
+  <div class="container hiw-narrow">
+    <span class="eyebrow">7. What If Things Go Wrong</span>
+    <h2>The honest scenarios.</h2>
+
+    <details class="scenario" open>
+      <summary>What if the developer discount is only 12% instead of 20%?</summary>
+      <p>Day-1 arbitrage drops from ₹20 L to ₹12 L per unit. The model still works — but the corpus is ₹8 L smaller per unit, so buyer rebates and investor margin both shrink proportionally. The structure is robust; the numbers just scale down. (Use the slider on any property page to test this yourself.)</p>
+    </details>
+
+    <details class="scenario">
+      <summary>What if markets crash and the corpus loses 25% in a year?</summary>
+      <p>Buyer rebates that year are paid only from realised yield, not from principal. In a deeply negative year, the rebate may be zero or near-zero. The buyer's bank EMI is unaffected (they pay the bank directly). The corpus recovers in subsequent years; rebates resume.</p>
+    </details>
+
+    <details class="scenario">
+      <summary>What if the investor wants to exit before 15 years?</summary>
+      <p>The 15-year lock-in is contractual. Secondary-market transfer to another qualified investor is permitted, similar to how senior debt securities trade. BrickReturn™ does not buy back from reserves.</p>
+    </details>
+
+    <details class="scenario">
+      <summary>What if the buyer pre-pays or sells the house?</summary>
+      <p>Rebate stream stops on the date the bank loan is closed. The buyer keeps all rebates already received. The unit's corpus contribution continues to service investors and the company.</p>
+    </details>
+
+    <details class="scenario">
+      <summary>What if interest rates spike (loan rates rise to 11%)?</summary>
+      <p>The buyer's bank EMI rises — that's between the buyer and their bank, outside BrickReturn™'s scope. But the corpus's debt-component yields also rise, partially offsetting at the portfolio level. The relative <em>relief</em> stays similar in absolute rupees.</p>
+    </details>
+
+    <details class="scenario">
+      <summary>What's the regulatory status?</summary>
+      <p>The model is in ideation and academic review stage. Legal viability under RERA, SEBI's AIF regulations, and RBI's NBFC framework has not been formally assessed. Operationalisation would require structuring as a regulated AIF (Alternative Investment Fund) with RERA-compliant inventory holding.</p>
+    </details>
+  </div>
+</section>
+
+<!-- 8. END-TO-END EXAMPLE -->
+<section id="example" class="hiw-section hiw-section-alt">
+  <div class="container hiw-narrow">
+    <span class="eyebrow">8. End-to-End Example</span>
+    <h2>A worked example, day by day.</h2>
+    <p>Imagine Aanya, a 32-year-old engineer in Bangalore. She wants a ₹1 crore 3-BHK in Sarjapur. Here's what happens:</p>
+
+    <ol class="example-timeline">
+      <li>
+        <div class="ex-time">Day 0</div>
+        <div class="ex-body">
+          <h4>BrickReturn™ has already bought the unit</h4>
+          <p>BrickReturn™ committed to a 25-unit block from the developer six months earlier at ₹80 L per unit. The arbitrage profit is already in the corpus.</p>
+        </div>
+      </li>
+      <li>
+        <div class="ex-time">Day 1</div>
+        <div class="ex-body">
+          <h4>Aanya signs the sale agreement at ₹1 Cr</h4>
+          <p>She applies for a home loan at her usual bank. ICICI approves ₹85 L at 9% for 12 years. Her standard EMI: ₹1,13,803/month.</p>
+        </div>
+      </li>
+      <li>
+        <div class="ex-time">Day 30</div>
+        <div class="ex-body">
+          <h4>First EMI hits. First rebate hits.</h4>
+          <p>Bank debits ₹1,13,803 from her account. BrickReturn™ credits ₹20,833 the same day. Net outflow: <strong>₹92,970</strong>.</p>
+        </div>
+      </li>
+      <li>
+        <div class="ex-time">Year 5</div>
+        <div class="ex-body">
+          <h4>Corpus has compounded. Rebate has grown.</h4>
+          <p>Monthly rebate is now ₹39,502. Aanya's net EMI: <strong>₹74,301</strong> — 35% lighter than year 1.</p>
+        </div>
+      </li>
+      <li>
+        <div class="ex-time">Year 12</div>
+        <div class="ex-body">
+          <h4>Final EMI. Loan closed.</h4>
+          <p>Final month rebate: ₹63,000. Net outflow: <strong>₹50,803</strong>. Aanya has received <strong>₹34.5 L</strong> in cumulative rebates over the tenure. She owns the house outright.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="example-comp">
+      <div class="ec-side ec-side-bad">
+        <h4>Without BrickReturn™</h4>
+        <p><strong>₹1.36 Cr</strong> in EMIs (interest + principal) over 12 years for a ₹1 Cr home.</p>
+      </div>
+      <div class="ec-vs">VS</div>
+      <div class="ec-side ec-side-good">
+        <h4>With BrickReturn™</h4>
+        <p><strong>₹1.02 Cr</strong> in net outflows after rebates for the same home.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="section section-cta">
+  <div class="container cta-inner">
+    <span class="eyebrow eyebrow-light">Next</span>
+    <h2>Try the model on a real property.</h2>
+    <p>Browse 99 live and completed projects across India. Each one shows you what you'd pay with a standard loan vs. what you'd pay with BrickReturn™ — adjustable by your own assumptions.</p>
+    <div class="cta-buttons">
+      <a href="index.html#properties" class="btn btn-primary">Browse Properties →</a>
+      <a href="index.html#math" class="btn btn-ghost">See the base math</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <div class="logo">
+        <span class="logo-mark">B</span>
+        <span class="logo-text">BrickReturn<sup>™</sup></span>
+      </div>
+      <p>A proposal to restructure residential home financing in India. Authored by Kartikey Kumar. Currently in ideation and academic review stage.</p>
+    </div>
+    <div class="footer-right">
+      <div class="footer-col">
+        <h5>Read</h5>
+        <a href="https://socialresults.blogspot.com/2026/05/indias-homebuyers-pay-too-much.html" target="_blank" rel="noopener">Full thesis on THE SOCIAL</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:kartikeyjaiswal42@gmail.com">kartikeyjaiswal42@gmail.com</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; 2026 BrickReturn™. All figures are illustrative projections based on current market assumptions and carry no guarantee of realised returns.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

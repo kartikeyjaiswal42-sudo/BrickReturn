@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Property Details — BrickReturn™</title>
+<meta name="description" content="See what you would pay with a standard loan vs. with BrickReturn™ — for this specific property." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">B</span>
+      <span class="logo-text">BrickReturn<sup>™</sup></span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#problem">The Problem</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="index.html#math">The Math</a>
+      <a href="index.html#properties">Properties</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+  </div>
+</header>
+
+<!-- Loading state -->
+<div id="loading" class="detail-loading">Loading property…</div>
+
+<!-- DETAIL CONTENT (rendered by JS) -->
+<main id="detail-root" style="display:none;">
+
+  <!-- Breadcrumb + header -->
+  <section class="detail-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="bc-sep">/</span>
+        <a href="index.html#properties">Properties</a>
+        <span class="bc-sep">/</span>
+        <span id="bc-name">—</span>
+      </div>
+      <div class="detail-head">
+        <div>
+          <span id="d-status" class="prop-tag tag-live">—</span>
+          <h1 id="d-name">—</h1>
+          <p id="d-meta" class="detail-sub">—</p>
+        </div>
+        <div class="detail-price-tag">
+          <span class="dpt-label">Market Price</span>
+          <span class="dpt-val" id="d-price">—</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Property facts strip -->
+  <section class="detail-facts">
+    <div class="container">
+      <div class="facts-grid">
+        <div class="fact"><span>Developer</span><strong id="d-dev">—</strong></div>
+        <div class="fact"><span>City</span><strong id="d-city">—</strong></div>
+        <div class="fact"><span>Locality</span><strong id="d-loc">—</strong></div>
+        <div class="fact"><span>Status</span><strong id="d-status2">—</strong></div>
+        <div class="fact"><span>Configuration</span><strong id="d-bhk">—</strong></div>
+        <div class="fact"><span>Carpet Area</span><strong id="d-area">—</strong></div>
+        <div class="fact"><span>RERA ID</span><strong id="d-rera">—</strong></div>
+        <div class="fact"><span>Developer Site</span><strong><a id="d-site" href="#" target="_blank" rel="noopener">Visit →</a></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE COMPARISON -->
+  <section class="section detail-compare">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Standard Loan vs. BrickReturn™</span>
+        <h2>Here's what this property actually costs you — both ways.</h2>
+        <p class="section-lede">Adjust the three sliders below to test your own assumptions. The 20% bulk discount isn't guaranteed every time — drag it down and see how the rebate stream changes.</p>
+      </div>
+
+      <!-- Assumption sliders -->
+      <div class="sliders-panel">
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-discount">Bulk discount from developer</label>
+            <span class="slider-val" id="sl-discount-val">20%</span>
+          </div>
+          <input type="range" id="sl-discount" min="0" max="25" step="0.5" value="20" />
+          <div class="slider-axis"><span>0%</span><span>25%</span></div>
+          <p class="slider-hint">Wholesale discount BR™ secures. 15-25% is typical.</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-markup">Corpus markup over property value</label>
+            <span class="slider-val" id="sl-markup-val">40%</span>
+          </div>
+          <input type="range" id="sl-markup" min="20" max="40" step="1" value="40" />
+          <div class="slider-axis"><span>20%</span><span>40%</span></div>
+          <p class="slider-hint">Total corpus = arbitrage + investor fund. Bigger pool = bigger rebate, more investor needed.</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-yield">Annual yield rate (corpus return)</label>
+            <span class="slider-val" id="sl-yield-val">10.0%</span>
+          </div>
+          <input type="range" id="sl-yield" min="6" max="15" step="0.5" value="10" />
+          <div class="slider-axis"><span>6%</span><span>15%</span></div>
+          <p class="slider-hint">Blended portfolio return (index funds + flexi-cap + gold). Indian markets historically 10-12%.</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-inv">Investor coupon (CAGR target)</label>
+            <span class="slider-val" id="sl-inv-val">8.5%</span>
+          </div>
+          <input type="range" id="sl-inv" min="8" max="8.5" step="0.1" value="8.5" />
+          <div class="slider-axis"><span>8.0%</span><span>8.5%</span></div>
+          <p class="slider-hint">Contractual return promised to investor over full tenure. Paid lump-sum at maturity.</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-rate">Home loan interest rate</label>
+            <span class="slider-val" id="sl-rate-val">9.0%</span>
+          </div>
+          <input type="range" id="sl-rate" min="6.5" max="12" step="0.1" value="9" />
+          <div class="slider-axis"><span>6.5%</span><span>12%</span></div>
+          <p class="slider-hint">Your bank's home loan rate. Indian rates ~8.5-10.5%.</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-head">
+            <label for="sl-tenure">Loan tenure (years)</label>
+            <span class="slider-val" id="sl-tenure-val">12 yrs</span>
+          </div>
+          <input type="range" id="sl-tenure" min="10" max="30" step="1" value="12" />
+          <div class="slider-axis"><span>10 yrs</span><span>30 yrs</span></div>
+          <p class="slider-hint">Minimum 10 yrs for the corpus to meaningfully compound.</p>
+        </div>
+
+        <button id="sl-reset" class="slider-reset">Reset to defaults</button>
+      </div>
+
+      <div class="compare-grid">
+        <!-- Standard column -->
+        <div class="compare-col compare-col-standard">
+          <div class="compare-tag compare-tag-bad">Standard Home Loan</div>
+          <h3>What you pay today</h3>
+          <div class="compare-row"><span>Property price</span><strong id="s-price">—</strong></div>
+          <div class="compare-row"><span>Loan rate / tenure</span><strong>9% / 12 yrs</strong></div>
+          <div class="compare-row"><span>Monthly EMI</span><strong id="s-emi">—</strong></div>
+          <div class="compare-row"><span>Total interest paid</span><strong class="text-warn" id="s-interest">—</strong></div>
+          <div class="compare-row compare-row-total"><span>Total you pay</span><strong id="s-total">—</strong></div>
+          <p class="compare-foot">You pay the price of the home — and then pay it again in interest.</p>
+        </div>
+
+        <!-- BrickReturn column -->
+        <div class="compare-col compare-col-br">
+          <div class="compare-tag compare-tag-good">With BrickReturn™</div>
+          <h3>What you'd actually pay</h3>
+          <div class="compare-row"><span>Bank EMI</span><strong id="b-emi">—</strong></div>
+          <div class="compare-row"><span>Year-1 monthly rebate</span><strong class="text-good" id="b-rb1">—</strong></div>
+          <div class="compare-row"><span>Year-12 monthly rebate</span><strong class="text-good" id="b-rb12">—</strong></div>
+          <div class="compare-row"><span>Net payment by year 12</span><strong class="text-good" id="b-net12">—</strong></div>
+          <div class="compare-row"><span>Avg EMI relief</span><strong class="text-good" id="b-avgrel">—</strong></div>
+          <div class="compare-row"><span>Total you save (cumulative rebates)</span><strong class="text-good" id="b-saved">—</strong></div>
+          <div class="compare-row compare-row-total"><span>Total you actually pay</span><strong class="text-good" id="b-actual">—</strong></div>
+          <p class="compare-foot">Rebates are performance-linked — funded by yield on the BrickReturn™ corpus, not by you.</p>
+        </div>
+      </div>
+
+      <!-- =========== BACKEND CALCULATION =========== -->
+      <div class="backend-calc">
+        <div class="backend-head">
+          <span class="eyebrow">Backend Calculation</span>
+          <h3>Year-by-year simulation. Pick your method.</h3>
+          <p><strong>Investor:</strong> locked at fixed 8–8.5% CAGR (slider) — paid lump sum at end, like a bank FD. <strong>Buyer:</strong> grows at MIN(actual yield, 10%) — earns 9% if portfolio earns 9%, capped at 10% if portfolio earns more. <strong>BR:</strong> takes the residual; profitable when actual yield ≥ ~9.5%. Yield slider auto-locks at that minimum so BR is never in a loss.</p>
+        </div>
+
+        <!-- BR profitability banner (3-state: good / warn / bad) -->
+        <div id="br-banner" class="br-banner br-banner-good">
+          <span class="br-banner-icon">✓</span>
+          <div class="br-banner-body">
+            <strong id="br-banner-head">—</strong>
+            <span id="br-banner-detail">—</span>
+          </div>
+        </div>
+
+        <!-- METHOD TOGGLE -->
+        <div class="method-toggle">
+          <label class="method-opt">
+            <input type="radio" name="bc-method" value="1" checked />
+            <div class="method-opt-body">
+              <div class="method-opt-title">
+                <strong>Method 1 — Buyer-Favoured</strong>
+                <span class="method-opt-tag">higher rebate</span>
+              </div>
+              <p>Buyer's notional balance grows at the <em>full</em> yield rate each year (no deduction). Generates a larger rebate stream — more attractive to homebuyer; BR earns less per unit.</p>
+            </div>
+          </label>
+          <label class="method-opt">
+            <input type="radio" name="bc-method" value="2" />
+            <div class="method-opt-body">
+              <div class="method-opt-title">
+                <strong>Method 2 — Balanced</strong>
+                <span class="method-opt-tag">better BR margin</span>
+              </div>
+              <p>Buyer's notional self-reduces by whatever was paid out (net 7.5% growth). Cleaner accounting; smaller rebate stream; BR retains more of the corpus.</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- PER-YEAR YIELD CUSTOMIZATION -->
+        <div class="custom-yields">
+          <div class="cy-head">
+            <h4>Per-year yield customization</h4>
+            <div class="cy-actions">
+              <button id="cy-stress" type="button" class="cy-preset">Stress: Y4 = −2.5%</button>
+              <button id="cy-boom"   type="button" class="cy-preset">Boom: Y2-3 = 14%</button>
+              <button id="cy-mixed"  type="button" class="cy-preset">Mixed market</button>
+              <button id="cy-reset"  type="button" class="cy-preset cy-preset-reset">Reset all</button>
+            </div>
+          </div>
+          <div class="cy-grid" id="cy-grid"></div>
+          <p class="cy-hint">Each year defaults to the slider's value (<strong id="cy-default-rate">10%</strong>). Edit any year to override — at 9% buyer earns 9%; at 12% buyer caps at 10%; negative = crash year (buyer ₹0, corpus shrinks).</p>
+        </div>
+
+        <!-- SETUP STRIP -->
+        <div class="bc-setup-grid">
+          <div class="bc-mini-step">
+            <span class="bc-mini-num">01</span>
+            <h5>Acquisition</h5>
+            <div class="bc-mini-rows">
+              <div><span>Market price</span><strong id="bc-price">—</strong></div>
+              <div><span>Bulk discount</span><strong id="bc-disc">—</strong></div>
+              <div><span>Bulk buy</span><strong id="bc-bulkbuy">—</strong></div>
+              <div class="bc-mini-key"><span>Day-1 arbitrage</span><strong id="bc-arb">—</strong></div>
+            </div>
+          </div>
+
+          <div class="bc-mini-step">
+            <span class="bc-mini-num">02</span>
+            <h5>Corpus Setup</h5>
+            <div class="bc-mini-rows">
+              <div><span>Markup over price</span><strong id="bc-markup">—</strong></div>
+              <div><span>Total corpus</span><strong id="bc-corpus">—</strong></div>
+              <div><span>From arbitrage</span><strong id="bc-arbpart">—</strong></div>
+              <div class="bc-mini-key"><span>Investor fund</span><strong id="bc-investor">—</strong></div>
+            </div>
+          </div>
+
+          <div class="bc-mini-step">
+            <span class="bc-mini-num">03</span>
+            <h5>Your Bank Loan</h5>
+            <div class="bc-mini-rows">
+              <div><span>You pay</span><strong id="bc-buyer-pays">—</strong></div>
+              <div><span>Loan rate</span><strong id="bc-rate-show">9.0%</strong></div>
+              <div><span>Tenure</span><strong id="bc-tenure-show">12 yrs</strong></div>
+              <div class="bc-mini-key"><span>Standard EMI</span><strong id="bc-emi">—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: YEAR-BY-YEAR TABLE -->
+        <div class="bc-sim">
+          <div class="bc-sim-head">
+            <div>
+              <span class="bc-num">04</span>
+              <h4>Year-by-year simulation <span id="bc-method-tag" class="bc-method-tag">Method 1</span></h4>
+            </div>
+            <span class="bc-tagline">Every row = one year. Yield, corpus growth, balances, rebate.</span>
+          </div>
+
+          <div class="bc-sim-table-wrap">
+            <table class="bc-sim-table">
+              <thead>
+                <tr>
+                  <th>Yr</th>
+                  <th>Yield</th>
+                  <th>Corpus (end)</th>
+                  <th>Investor not.</th>
+                  <th>Buyer not.</th>
+                  <th>Annual rebate</th>
+                  <th>Monthly rebate</th>
+                  <th>Net EMI</th>
+                </tr>
+              </thead>
+              <tbody id="bc-sim-body">
+                <!-- populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- WORKED EXAMPLE: any year mechanics -->
+        <div class="worked-example">
+          <div class="we-head">
+            <span class="bc-num">★</span>
+            <h4>Worked example — year <select id="we-year-select" class="we-year-select"></select> mechanics</h4>
+            <span class="bc-tagline">Detailed math for the selected year + method.</span>
+          </div>
+
+          <!-- Shared row -->
+          <div class="we-shared">
+            <h5>Year <span id="we-shared-year">1</span> — shared by both methods</h5>
+            <div class="we-rows">
+              <div class="we-row"><span>Starting corpus <em>C₀</em></span><strong id="we-c0">—</strong></div>
+              <div class="we-row"><span>Actual yield <em>= C₀ × <span id="we-actual-rate">10</span>%</em></span><strong id="we-actual-yield">—</strong> <span class="we-tag we-tag-actual">actual</span></div>
+              <div class="we-row"><span>Buyer's rate <em>= MIN(actual, 10%)</em> = <strong id="we-buyer-rate-pct">10</strong>%</span><strong id="we-buyer-basis">—</strong> <span class="we-tag we-tag-buyer" id="we-buyer-tag">tracks actual</span></div>
+              <div class="we-row we-row-key"><span>Buyer's annual rebate <em>= 25% × (B₀ × buyer's rate)</em></span><strong id="we-rebate">—</strong></div>
+              <div class="we-row we-row-key"><span>Buyer's monthly rebate</span><strong id="we-monthly">—</strong></div>
+              <div class="we-row"><span>Investor accrual <em>= I₀ × <span id="we-inv-rate">8.5</span>%</em> <small>(fixed CAGR, like an FD)</small></span><strong id="we-inv-accrual">—</strong> <span class="we-tag we-tag-inv">locked</span></div>
+              <div class="we-row"><span>Corpus end <em>C₁ = C₀ + actual yield − rebate</em></span><strong id="we-c1">—</strong></div>
+              <div class="we-row"><span>BR's Y1 yield surplus <em>= actual yield − investor accrual − rebate</em></span><strong id="we-surplus" class="we-good">—</strong> <span class="we-tag we-tag-bonus">to BR</span></div>
+            </div>
+          </div>
+
+          <!-- Method comparison -->
+          <div class="we-grid">
+            <div class="we-method-card">
+              <div class="we-mtag we-mtag-1">Method 1 — buyer-favoured</div>
+              <p class="we-desc">Buyer's notional grows at the buyer's rate <em>(min of actual yield and 10%)</em>.</p>
+              <div class="we-formula">
+                B₁ = B₀ × (1 + <strong id="we-m1-rate-pct">10</strong>%) = <strong id="we-m1-b1">—</strong>
+              </div>
+              <p class="we-impl">Next year's basis is bigger → bigger Y2 rebate. Buyer total grows fastest.</p>
+              <div class="we-y2">
+                <span>Y2 rebate basis: B₁ × <strong id="we-m1-rate-pct2">10</strong>% = <strong id="we-m1-y2basis">—</strong></span>
+                <span>Y2 monthly: <strong id="we-m1-y2mo">—</strong></span>
+              </div>
+            </div>
+
+            <div class="we-method-card">
+              <div class="we-mtag we-mtag-2">Method 2 — balanced</div>
+              <p class="we-desc">Buyer's notional grows at buyer's rate, then the rebate paid out is subtracted.</p>
+              <div class="we-formula">
+                B₁ = B₀ + (B₀ × <strong id="we-m2-rate-pct">10</strong>%) − rebate<br/>
+                   = <strong id="we-m2-b1">—</strong>
+              </div>
+              <p class="we-impl">Smaller basis next year → smaller Y2 rebate. More retained in corpus → bigger BR stake.</p>
+              <div class="we-y2">
+                <span>Y2 rebate basis: B₁ × <strong id="we-m2-rate-pct2">10</strong>% = <strong id="we-m2-y2basis">—</strong></span>
+                <span>Y2 monthly: <strong id="we-m2-y2mo">—</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <p class="we-note">
+            <strong>Key rule:</strong> the buyer's growth rate is <em>MIN(actual yield, 10%)</em>. If actual yield is 9%, buyer earns 9% (rebate scaled accordingly). If actual is 12%, buyer caps at 10% and the 2% surplus stays with BR. The investor's 8–8.5% CAGR is locked separately (slider) — paid as a lump sum at the end of the tenure, regardless of how high or low actual yield ran.
+          </p>
+
+          <!-- Aggregate summary across all years -->
+          <div class="we-summary">
+            <div class="we-summary-item">
+              <div class="we-ss-label">Avg actual yield over <span class="we-ss-tenure">12</span> yrs</div>
+              <div class="we-ss-val" id="we-ss-avg-actual">—</div>
+              <div class="we-ss-sub" id="we-ss-avg-actual-sub">—</div>
+            </div>
+            <div class="we-summary-item">
+              <div class="we-ss-label">Buyer's avg effective rate</div>
+              <div class="we-ss-val" id="we-ss-avg-buyer">—</div>
+              <div class="we-ss-sub">capped at 10% on the upside</div>
+            </div>
+            <div class="we-summary-item">
+              <div class="we-ss-label">Investor's locked rate</div>
+              <div class="we-ss-val" id="we-ss-inv">—</div>
+              <div class="we-ss-sub">paid lump sum at maturity</div>
+            </div>
+            <div class="we-summary-item we-summary-br" id="we-ss-br-box">
+              <div class="we-ss-label">BR's outcome over <span class="we-ss-tenure">12</span> yrs</div>
+              <div class="we-ss-val" id="we-ss-br">—</div>
+              <div class="we-ss-sub" id="we-ss-br-sub">—</div>
+            </div>
+          </div>
+        </div>
+        <!-- /WORKED EXAMPLE -->
+
+        <!-- STEP 5: FINAL OUTCOME -->
+        <div class="bc-final">
+          <div class="bc-final-head">
+            <span class="bc-num">05</span>
+            <h4>Final outcome at end of tenure</h4>
+          </div>
+
+          <div class="bc-final-grid">
+            <div class="bc-final-card bc-final-buyer">
+              <div class="bc-final-tag">HOMEBUYER</div>
+              <div class="bc-final-val" id="bc-final-buyer">—</div>
+              <div class="bc-final-lbl">total rebate received over <span id="bc-final-tenure">12</span> yrs</div>
+              <div class="bc-final-sub">Y1: ₹<span id="bc-final-y1">—</span>/mo · Y<span id="bc-final-yN-num">12</span>: ₹<span id="bc-final-yN">—</span>/mo · avg <span id="bc-final-avg">—</span>% EMI relief</div>
+            </div>
+            <div class="bc-final-card bc-final-investor">
+              <div class="bc-final-tag">INVESTOR</div>
+              <div class="bc-final-val" id="bc-final-investor">—</div>
+              <div class="bc-final-lbl">lump-sum payout at maturity</div>
+              <div class="bc-final-sub">From ₹<span id="bc-final-inv-start">—</span> commit at <span id="bc-final-inv-cagr">8.5</span>% CAGR</div>
+            </div>
+            <div class="bc-final-card bc-final-br">
+              <div class="bc-final-tag">BRICKRETURN™</div>
+              <div class="bc-final-val" id="bc-final-br">—</div>
+              <div class="bc-final-lbl">BR's residual stake</div>
+              <div class="bc-final-sub">From ₹<span id="bc-final-br-start">—</span> arbitrage · <span id="bc-final-br-mult">—</span>× growth</div>
+            </div>
+          </div>
+
+          <!-- Alternate method preview -->
+          <div class="bc-alt">
+            Under <strong id="bc-alt-name">Method 2</strong> instead, the buyer would get <strong id="bc-alt-buyer">—</strong> total and BR would keep <strong id="bc-alt-br">—</strong>. <button type="button" id="bc-alt-link" class="bc-alt-link">Switch to compare ↑</button>
+          </div>
+        </div>
+      </div>
+      <!-- =========== /BACKEND CALCULATION =========== -->
+
+      <!-- =========== HOW BOTH METHODS WORK — FROM EACH PERSPECTIVE =========== -->
+      <div class="methods-explainer">
+        <div class="me-head">
+          <span class="eyebrow">How each method works</span>
+          <h3>Three perspectives. Two methods. One investor outcome.</h3>
+          <p>The two methods differ only in how the buyer's notional balance is tracked. The investor's lump-sum payout is identical in both. Pick the method that matches how you want to position the deal.</p>
+        </div>
+
+        <div class="me-grid">
+
+          <!-- For BrickReturn (You) -->
+          <div class="me-card me-card-br">
+            <div class="me-card-head">
+              <div class="me-icon">🏢</div>
+              <div>
+                <div class="me-tag">FOR YOU</div>
+                <h4>BrickReturn™</h4>
+              </div>
+            </div>
+            <div class="me-card-body">
+              <div class="me-method">
+                <div class="me-method-tag me-method-1">Method 1 · Buyer-favoured</div>
+                <p>You end with <strong id="me-br-m1-stake">—</strong> from a starting arbitrage of <strong id="me-br-m1-arb">—</strong> (<strong id="me-br-m1-mult">—</strong>× growth). Lower margin per unit, but the bigger rebate makes the deal easier to close. <em>Use when scaling matters more than per-unit profit.</em></p>
+              </div>
+              <div class="me-method">
+                <div class="me-method-tag me-method-2">Method 2 · Balanced</div>
+                <p>You end with <strong id="me-br-m2-stake">—</strong> (<strong id="me-br-m2-mult">—</strong>× growth) — more value stays in the corpus because the buyer is paid less over the same tenure. <em>Use in mature markets with organic demand and less need for aggressive incentives.</em></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- For Investor -->
+          <div class="me-card me-card-investor">
+            <div class="me-card-head">
+              <div class="me-icon">📈</div>
+              <div>
+                <div class="me-tag">FOR THEM</div>
+                <h4>The Investor</h4>
+              </div>
+            </div>
+            <div class="me-card-body">
+              <div class="me-method">
+                <div class="me-method-tag me-method-1">Method 1</div>
+                <p>Receives <strong id="me-inv-m1-payout">—</strong> at maturity from a <strong id="me-inv-m1-start">—</strong> commitment — a contractual <strong id="me-inv-m1-cagr">8.5</strong>% CAGR. Lump-sum paid at end of <strong id="me-inv-m1-tenure">12</strong> years.</p>
+              </div>
+              <div class="me-method">
+                <div class="me-method-tag me-method-2">Method 2</div>
+                <p><strong>Identical outcome — same <span id="me-inv-m2-payout">—</span></strong>. The investor's payout is fully insulated from how you account for the buyer's rebate. Your method choice doesn't affect them.</p>
+              </div>
+              <div class="me-note">✓ Both methods deliver the investor the same return.</div>
+            </div>
+          </div>
+
+          <!-- For Homebuyer -->
+          <div class="me-card me-card-buyer">
+            <div class="me-card-head">
+              <div class="me-icon">🏠</div>
+              <div>
+                <div class="me-tag">FOR THEM</div>
+                <h4>The Homebuyer</h4>
+              </div>
+            </div>
+            <div class="me-card-body">
+              <div class="me-method">
+                <div class="me-method-tag me-method-1">Method 1</div>
+                <p>Receives <strong id="me-buy-m1-total">—</strong> total over the tenure. Monthly rebate grows from <strong id="me-buy-m1-y1">—</strong> in Y1 to <strong id="me-buy-m1-yN">—</strong> by Y<span id="me-buy-m1-tenure">12</span> — <strong id="me-buy-m1-relief">—</strong>% off EMI on average. <em>Bigger upside; great for wealth preservation.</em></p>
+              </div>
+              <div class="me-method">
+                <div class="me-method-tag me-method-2">Method 2</div>
+                <p>Receives <strong id="me-buy-m2-total">—</strong> total. Monthly rebate grows more steadily, ending at <strong id="me-buy-m2-yN">—</strong> by Y<span id="me-buy-m2-tenure">12</span> — <strong id="me-buy-m2-relief">—</strong>% relief on average. <em>Smaller but more predictable curve.</em></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Decision footer -->
+        <div class="me-decision">
+          <div class="me-decision-icon">🎯</div>
+          <div>
+            <h5>How to decide which method to offer</h5>
+            <p>If you're entering a new market or attracting first-time customers, <strong>Method 1's bigger rebate</strong> is a stronger pitch. If you have steady buyer flow and want to maximise per-unit retention, <strong>Method 2 keeps more in the corpus</strong>. The investor sees no difference either way — the choice is entirely between you and the homebuyer.</p>
+          </div>
+        </div>
+      </div>
+      <!-- =========== /METHODS EXPLAINER =========== -->
+
+      <!-- Year-by-year schedule -->
+      <h3 class="schedule-title">Year-by-year EMI schedule for this property</h3>
+      <div class="emi-table-wrap emi-table-wrap-light">
+        <table class="emi-table emi-table-light">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Bank EMI</th>
+              <th>Monthly Rebate</th>
+              <th>Net Payment</th>
+              <th>Relief</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="schedule-summary">
+        <div class="ss-item"><div class="ss-num" id="ss-savings">—</div><div class="ss-label">Total saved over 12 years</div></div>
+        <div class="ss-item"><div class="ss-num" id="ss-avg">—</div><div class="ss-label">Average EMI relief</div></div>
+        <div class="ss-item"><div class="ss-num" id="ss-y12">—</div><div class="ss-label" id="ss-y12-label">Year-12 monthly net</div></div>
+      </div>
+
+      <div class="detail-cta-row">
+        <a href="index.html#model" class="btn btn-primary">How BrickReturn™ works →</a>
+        <a href="index.html#properties" class="btn btn-ghost">← Browse other properties</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 404 state -->
+<div id="not-found" class="detail-loading" style="display:none;">
+  <p>Property not found.</p>
+  <a href="index.html#properties" class="btn btn-primary" style="margin-top:18px;">← Back to catalog</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <div class="logo">
+        <span class="logo-mark">B</span>
+        <span class="logo-text">BrickReturn<sup>™</sup></span>
+      </div>
+      <p>A proposal to restructure residential home financing in India. Authored by Kartikey Kumar. Currently in ideation and academic review stage.</p>
+    </div>
+    <div class="footer-right">
+      <div class="footer-col">
+        <h5>Read</h5>
+        <a href="https://socialresults.blogspot.com/2026/05/indias-homebuyers-pay-too-much.html" target="_blank" rel="noopener">Full thesis on THE SOCIAL</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:kartikeyjaiswal42@gmail.com">kartikeyjaiswal42@gmail.com</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; 2026 BrickReturn™. All figures are illustrative projections based on current market assumptions and carry no guarantee of realised returns.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="property.js"></script>
+</body>
+</html>
