@@ -67,12 +67,121 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // -------------------------------------------------------
+  // Mobile nav (hamburger)
+  // -------------------------------------------------------
+  const nav = document.querySelector('.nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  if (nav && navToggle) {
+    const setMenu = (open) => {
+      nav.classList.toggle('menu-open', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    navToggle.addEventListener('click', () => setMenu(!nav.classList.contains('menu-open')));
+    // close after tapping a link
+    nav.querySelectorAll('.nav-links a').forEach(a =>
+      a.addEventListener('click', () => setMenu(false)));
+    // close on Escape or when resizing back to desktop
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 820) setMenu(false); });
+  }
+
+  // -------------------------------------------------------
+  // EMI relief chart (homepage Math section)
+  // -------------------------------------------------------
+  const chartEl = document.getElementById('emi-chart');
+  if (chartEl && typeof calcBrickReturn === 'function') {
+    renderEmiChart(chartEl);
+    const chartIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { chartEl.classList.add('in'); chartIO.disconnect(); }
+      });
+    }, { threshold: 0.3 });
+    chartIO.observe(chartEl);
+  }
+
+  // -------------------------------------------------------
   // Property catalog: load, filter, render
   // -------------------------------------------------------
   const grid = document.getElementById('prop-grid');
   if (grid) initPropertyCatalog();
 
 });
+
+// ---------------------------------------------------------
+// Render the EMI-relief SVG chart from the real calc engine
+// (flat Bank EMI vs declining Net Payment; shaded rebate area)
+// ---------------------------------------------------------
+function renderEmiChart(el) {
+  const calc = calcBrickReturn(1); // canonical ₹1 Cr example
+  const years = calc.years;
+  const n = years.length;
+  const bank = calc.monthlyEMI;
+  const net = years.map(y => bank - y.monthlyRebate);
+
+  // SVG coordinate space
+  const W = 820, H = 380;
+  const padL = 64, padR = 24, padT = 24, padB = 44;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  const yMax = Math.ceil(bank / 10000) * 10000;
+  const yMin = Math.floor(Math.min(...net) * 0.9 / 10000) * 10000;
+  const xAt = (i) => padL + (plotW * i) / (n - 1);
+  const yAt = (v) => padT + plotH * (1 - (v - yMin) / (yMax - yMin));
+
+  // y-axis gridlines / labels (4 bands)
+  let grid = '';
+  for (let g = 0; g <= 4; g++) {
+    const v = yMin + (yMax - yMin) * g / 4;
+    const y = yAt(v);
+    grid += `<line class="grid-line" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"/>`;
+    grid += `<text class="axis-label" x="${padL - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end">₹${Math.round(v / 1000)}k</text>`;
+  }
+
+  // x-axis labels (every other year + first/last)
+  let xlabels = '';
+  years.forEach((yr, i) => {
+    if (i === 0 || i === n - 1 || (yr.year % 2 === 0)) {
+      xlabels += `<text class="axis-label" x="${xAt(i).toFixed(1)}" y="${H - padB + 22}" text-anchor="middle">Y${yr.year}</text>`;
+    }
+  });
+
+  const bankPts = years.map((_, i) => `${xAt(i).toFixed(1)},${yAt(bank).toFixed(1)}`).join(' ');
+  const netPts = net.map((v, i) => `${xAt(i).toFixed(1)},${yAt(v).toFixed(1)}`).join(' ');
+
+  // rebate area = polygon between bank line and net line
+  const areaPts = bankPts + ' ' +
+    net.map((v, i) => `${xAt(n - 1 - i).toFixed(1)},${yAt(net[n - 1 - i]).toFixed(1)}`).join(' ');
+
+  // approximate net-line length for the draw animation
+  let netLen = 0;
+  for (let i = 1; i < n; i++) {
+    const dx = xAt(i) - xAt(i - 1), dy = yAt(net[i]) - yAt(net[i - 1]);
+    netLen += Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // end-point marker (year N)
+  const endX = xAt(n - 1), endY = yAt(net[n - 1]);
+  const reliefPct = Math.round((1 - net[n - 1] / bank) * 100);
+
+  el.innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="rebateGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c8553d" stop-opacity="0.30"/>
+          <stop offset="100%" stop-color="#c8553d" stop-opacity="0.04"/>
+        </linearGradient>
+      </defs>
+      ${grid}
+      ${xlabels}
+      <polygon class="rebate-area" points="${areaPts}"/>
+      <polyline class="line-bank" points="${bankPts}"/>
+      <polyline class="line-net draw" points="${netPts}" style="--len:${netLen.toFixed(0)}"/>
+      <circle class="dot" cx="${endX.toFixed(1)}" cy="${endY.toFixed(1)}" r="6"/>
+      <text class="dot-label" x="${endX.toFixed(1)}" y="${(endY - 16).toFixed(1)}" text-anchor="end">−${reliefPct}%</text>
+    </svg>`;
+}
 
 // ---------------------------------------------------------
 // Property catalog
@@ -260,8 +369,9 @@ function calcBrickReturn(priceCr, opts) {
     const isLoss = actualYRate < 0;
     // Buyer: tracks actual yield, but capped at 10% on upside
     const buyerYRate    = isLoss ? actualYRate : Math.min(actualYRate, BUYER_CAP / 100);
-    // Investor: fixed CAGR in positive years, follows loss in loss years
-    const investorYRate = isLoss ? actualYRate : investorRate / 100;
+    // Investor is a fixed-deposit: ALWAYS compounds at the locked CAGR every
+    // year, win or lose. BrickReturn absorbs market losses, never the investor.
+    const investorYRate = investorRate / 100;
 
     let yieldAmt, buyerYield, rebate, C_end, I_end, B_end;
 
@@ -270,7 +380,7 @@ function calcBrickReturn(priceCr, opts) {
       buyerYield = B * actualYRate;
       rebate     = 0;
       C_end = C * (1 + actualYRate);
-      I_end = I * (1 + actualYRate);
+      I_end = I * (1 + investorYRate);   // investor still grows at locked rate
       B_end = B * (1 + actualYRate);
     } else {
       yieldAmt   = C * actualYRate;

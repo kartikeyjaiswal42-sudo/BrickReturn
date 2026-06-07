@@ -19,14 +19,18 @@
       <span class="logo-mark">B</span>
       <span class="logo-text">BrickReturn<sup>™</sup></span>
     </a>
-    <nav class="nav-links">
+    <nav class="nav-links" id="primary-nav">
       <a href="index.html#problem">The Problem</a>
       <a href="how-it-works.html">How It Works</a>
       <a href="index.html#math">The Math</a>
       <a href="index.html#properties">Properties</a>
       <a href="index.html#faq">FAQ</a>
+      <a href="index.html#contact" class="nav-cta nav-cta-mobile">Get in Touch</a>
     </nav>
     <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -178,6 +182,49 @@
         </div>
       </div>
 
+      <!-- =========== LIVE VISUAL BREAKDOWN =========== -->
+      <div class="viz-panel">
+        <div class="viz-head">
+          <span class="eyebrow">Visual Breakdown</span>
+          <h3>Watch the numbers move as you drag the sliders.</h3>
+          <p>Every chart below recalculates live from your assumptions — yield, tenure, discount, method and per-year overrides all feed straight in.</p>
+        </div>
+        <div class="viz-grid">
+          <figure class="viz-card">
+            <figcaption class="viz-card-head">
+              <h4>Your monthly payment, year by year</h4>
+              <div class="viz-legend" id="viz-emi-legend"></div>
+            </figcaption>
+            <div class="viz-chart" id="viz-emi"></div>
+          </figure>
+
+          <figure class="viz-card">
+            <figcaption class="viz-card-head">
+              <h4>Annual rebate you receive</h4>
+              <span class="viz-sub" id="viz-rebate-sub">—</span>
+            </figcaption>
+            <div class="viz-chart" id="viz-rebate"></div>
+          </figure>
+
+          <figure class="viz-card">
+            <figcaption class="viz-card-head">
+              <h4>The corpus engine — compounding</h4>
+              <div class="viz-legend" id="viz-corpus-legend"></div>
+            </figcaption>
+            <div class="viz-chart" id="viz-corpus"></div>
+          </figure>
+
+          <figure class="viz-card">
+            <figcaption class="viz-card-head">
+              <h4>Total cost — Standard vs BrickReturn™</h4>
+              <span class="viz-sub" id="viz-cost-sub">over full tenure</span>
+            </figcaption>
+            <div class="viz-chart" id="viz-cost"></div>
+          </figure>
+        </div>
+      </div>
+      <!-- =========== /LIVE VISUAL BREAKDOWN =========== -->
+
       <!-- =========== BACKEND CALCULATION =========== -->
       <div class="backend-calc">
         <div class="backend-head">
@@ -231,7 +278,7 @@
             </div>
           </div>
           <div class="cy-grid" id="cy-grid"></div>
-          <p class="cy-hint">Each year defaults to the slider's value (<strong id="cy-default-rate">10%</strong>). Edit any year to override — at 9% buyer earns 9%; at 12% buyer caps at 10%; negative = crash year (buyer ₹0, corpus shrinks).</p>
+          <p class="cy-hint">Each year defaults to the slider's value (<strong id="cy-default-rate">10%</strong>). Type any year to override — at 9% buyer earns 9%; at 12% buyer caps at 10%; negative = crash year (buyer ₹0, corpus shrinks, but the investor still earns their fixed 8.5%).</p>
         </div>
 
         <!-- SETUP STRIP -->

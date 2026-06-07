@@ -126,6 +126,7 @@
 
     paintBanner(c, minYRounded);
     paintComparison(c);
+    paintCharts(c);
     paintSetup(c);
     paintCustomYieldsGrid(c);
     paintSimTable(c);
@@ -362,37 +363,65 @@
   }
 
   // ---------- Per-year yield grid ----------
+  // Build the grid ONCE (rebuild only when the number of years changes). On
+  // every other recalc we refresh colours/placeholder WITHOUT replacing the
+  // <input> the user is typing in — replacing it would drop focus after a
+  // single keystroke, which is why multi-digit / negative / decimal values
+  // previously "wouldn't take".
   function paintCustomYieldsGrid(c) {
     const grid = document.getElementById('cy-grid');
     if (!grid) return;
     setText('cy-default-rate', `${c.yieldRate.toFixed(1)}%`);
 
-    grid.innerHTML = c.years.map((yr, i) => {
-      const override = customYields[i];
-      const overridden = (override !== null && override !== undefined);
-      const cls = overridden
-        ? (yr.yieldPct < 0 ? 'cy-cell cy-cell-loss' : (yr.yieldPct >= 10 ? 'cy-cell cy-cell-cap' : 'cy-cell cy-cell-set'))
-        : 'cy-cell';
-      return `
-        <div class="${cls}">
+    const cellClass = (i) => {
+      const ov = customYields[i];
+      if (ov === null || ov === undefined || Number.isNaN(ov)) return 'cy-cell';
+      const yp = c.years[i].yieldPct;
+      return yp < 0 ? 'cy-cell cy-cell-loss'
+           : (yp >= 10 ? 'cy-cell cy-cell-cap' : 'cy-cell cy-cell-set');
+    };
+    const wantVal = (i) => {
+      const ov = customYields[i];
+      return (ov === null || ov === undefined || Number.isNaN(ov)) ? '' : String(ov);
+    };
+
+    if (grid.children.length !== c.years.length) {
+      // First render (or tenure changed): build fresh + attach handlers once.
+      grid.innerHTML = c.years.map((yr, i) => `
+        <div class="${cellClass(i)}">
           <div class="cy-yr">Y${yr.year}</div>
           <div class="cy-input-wrap">
-            <input type="number" class="cy-input" data-year="${yr.year}" value="${overridden ? override : ''}" placeholder="${c.yieldRate.toFixed(1)}" step="0.5" min="-25" max="30" />
+            <input type="number" inputmode="decimal" class="cy-input" data-year="${yr.year}"
+                   value="${wantVal(i)}" placeholder="${c.yieldRate.toFixed(1)}" step="any" min="-25" max="30" />
             <span class="cy-pct">%</span>
           </div>
-        </div>
-      `;
-    }).join('');
+        </div>`).join('');
 
-    // Attach handlers
-    grid.querySelectorAll('.cy-input').forEach(input => {
-      input.addEventListener('input', (e) => {
-        const yr = parseInt(e.target.dataset.year, 10);
-        const v = e.target.value.trim();
-        customYields[yr - 1] = (v === '') ? null : parseFloat(v);
-        recalc();
+      grid.querySelectorAll('.cy-input').forEach(input => {
+        const commit = (e) => {
+          const idx = parseInt(e.target.dataset.year, 10) - 1;
+          const raw = e.target.value.trim();
+          const num = parseFloat(raw);
+          customYields[idx] = (raw === '' || Number.isNaN(num)) ? null : num;
+          recalc();
+        };
+        input.addEventListener('input', commit);
+        input.addEventListener('change', commit);
       });
-    });
+    } else {
+      // Refresh in place — never disturb the field currently being edited.
+      c.years.forEach((yr, i) => {
+        const cell = grid.children[i];
+        if (!cell) return;
+        cell.className = cellClass(i);
+        const input = cell.querySelector('.cy-input');
+        if (!input) return;
+        input.placeholder = c.yieldRate.toFixed(1);
+        if (document.activeElement !== input && input.value !== wantVal(i)) {
+          input.value = wantVal(i);
+        }
+      });
+    }
   }
 
   // ---------- Year selector for worked example ----------
@@ -563,6 +592,295 @@
         </tr>
       `;
     }).join('');
+  }
+
+  // ===================================================================
+  // LIVE CHARTS — rebuilt on every recalc() so they track the sliders
+  // ===================================================================
+  function paintCharts(c) {
+    renderEmiChart(c);
+    renderRebateChart(c);
+    renderCorpusChart(c);
+    renderCostChart(c);
+  }
+
+  const CLR = { bank: '#98a0b3', net: '#c8553d', netSoft: '#e89880',
+                corpus: '#c8553d', investor: '#d4a24c', buyer: '#6b9bd1',
+                loss: '#d65a3f', save: '#3fa861', grid: '#232838' };
+
+  function niceTop(v) {
+    if (v <= 0) return 1;
+    const mag = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / mag;
+    const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+    return step * mag;
+  }
+  // short ₹ for axis (k / L / Cr)
+  function axMoney(n) {
+    if (n >= 1e7) return '₹' + (n / 1e7).toFixed(n % 1e7 ? 1 : 0) + 'Cr';
+    if (n >= 1e5) return '₹' + Math.round(n / 1e5) + 'L';
+    if (n >= 1e3) return '₹' + Math.round(n / 1e3) + 'k';
+    return '₹' + Math.round(n);
+  }
+
+  // Tooltip helper bound to a chart container
+  function makeTip(container) {
+    let tip = container.querySelector('.viz-tip');
+    if (!tip) { tip = document.createElement('div'); tip.className = 'viz-tip'; container.appendChild(tip); }
+    return tip;
+  }
+
+  // ---- Chart 1: monthly payment (bank flat vs net declining + rebate area)
+  function renderEmiChart(c) {
+    const host = document.getElementById('viz-emi');
+    const leg = document.getElementById('viz-emi-legend');
+    if (!host) return;
+    leg.innerHTML =
+      `<span class="lg"><i style="background:${CLR.bank}"></i>Bank EMI</span>
+       <span class="lg"><i style="background:${CLR.net}"></i>Net payment</span>
+       <span class="lg"><i style="background:rgba(200,85,61,.28);border:1px solid ${CLR.netSoft}"></i>Rebate</span>`;
+
+    const yrs = c.years, n = yrs.length;
+    const bank = c.emi;
+    const net = yrs.map(y => y.isLoss ? bank : Math.round(y.netEMI));
+    const W = 460, H = 240, padL = 52, padR = 14, padT = 16, padB = 30;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const yMax = niceTop(bank * 1.05);
+    const yMin = 0;
+    const X = i => padL + (n === 1 ? pw / 2 : pw * i / (n - 1));
+    const Y = v => padT + ph * (1 - (v - yMin) / (yMax - yMin));
+
+    let grid = '', ax = '';
+    for (let g = 0; g <= 4; g++) {
+      const v = yMax * g / 4, y = Y(v);
+      grid += `<line class="vz-grid" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"/>`;
+      ax += `<text class="vz-axis" x="${padL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end">${axMoney(v)}</text>`;
+    }
+    let xlab = '';
+    yrs.forEach((yr, i) => {
+      if (i === 0 || i === n - 1 || yr.year % Math.ceil(n / 6) === 0)
+        xlab += `<text class="vz-axis" x="${X(i).toFixed(1)}" y="${H - padB + 18}" text-anchor="middle">Y${yr.year}</text>`;
+    });
+
+    const bankPts = yrs.map((_, i) => `${X(i).toFixed(1)},${Y(bank).toFixed(1)}`).join(' ');
+    const netPts = net.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+    const area = bankPts + ' ' + net.map((v, i) => `${X(n - 1 - i).toFixed(1)},${Y(net[n - 1 - i]).toFixed(1)}`).join(' ');
+    const dots = net.map((v, i) => `<circle class="vz-dot" cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="${CLR.net}"/>`).join('');
+
+    host.innerHTML =
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        <defs><linearGradient id="emiGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c8553d" stop-opacity=".30"/>
+          <stop offset="100%" stop-color="#c8553d" stop-opacity=".03"/>
+        </linearGradient></defs>
+        ${grid}${ax}${xlab}
+        <polygon class="vz-area" points="${area}" fill="url(#emiGrad)"/>
+        <polyline class="vz-line vz-dashed" points="${bankPts}" stroke="${CLR.bank}"/>
+        <polyline class="vz-line" points="${netPts}" stroke="${CLR.net}"/>
+        ${dots}
+        <line class="vz-guide" x1="0" y1="${padT}" x2="0" y2="${H - padB}" style="opacity:0"/>
+        <rect class="vz-hit" x="${padL}" y="${padT}" width="${pw}" height="${ph}"/>
+      </svg>`;
+
+    attachHover(host, W, padL, pw, n, X, (i) => {
+      const yr = yrs[i], rb = yr.isLoss ? 0 : Math.round(yr.monthlyRebate);
+      return {
+        x: X(i), y: Y(net[i]),
+        html: `<div class="vt-yr">Year ${yr.year}${yr.isLoss ? ' · loss yr' : ''}</div>
+          <div class="vt-row"><i style="background:${CLR.bank}"></i>Bank EMI <b>₹${fmtINR(bank)}</b></div>
+          <div class="vt-row"><i style="background:${CLR.netSoft}"></i>Rebate <b>−₹${fmtINR(rb)}</b></div>
+          <div class="vt-row"><i style="background:${CLR.net}"></i>Net pay <b>₹${fmtINR(net[i])}</b></div>`
+      };
+    });
+  }
+
+  // ---- Chart 2: annual rebate bars
+  function renderRebateChart(c) {
+    const host = document.getElementById('viz-rebate');
+    const sub = document.getElementById('viz-rebate-sub');
+    if (!host) return;
+    sub.innerHTML = `Total <strong>₹${fmtCrL(c.totalRebate)}</strong> over ${c.tenure} yrs`;
+
+    const yrs = c.years, n = yrs.length;
+    const vals = yrs.map(y => Math.round(y.rebate));
+    const W = 460, H = 240, padL = 52, padR = 14, padT = 18, padB = 30;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const yMax = niceTop(Math.max(...vals, 1) * 1.12);
+    const Y = v => padT + ph * (1 - v / yMax);
+    const gap = Math.min(10, pw / n * 0.35);
+    const bw = pw / n - gap;
+
+    let grid = '', ax = '';
+    for (let g = 0; g <= 4; g++) {
+      const v = yMax * g / 4, y = Y(v);
+      grid += `<line class="vz-grid" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"/>`;
+      ax += `<text class="vz-axis" x="${padL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end">${axMoney(v)}</text>`;
+    }
+    const peak = Math.max(...vals);
+    let bars = '', xlab = '';
+    yrs.forEach((yr, i) => {
+      const x = padL + pw * i / n + gap / 2;
+      const v = vals[i], h = Math.max(0, ph - (Y(v) - padT));
+      const fill = yr.isLoss ? CLR.loss : 'url(#rbGrad)';
+      bars += `<rect class="vz-bar" x="${x.toFixed(1)}" y="${Y(v).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${fill}"/>`;
+      if (v === peak && peak > 0)
+        bars += `<text class="vz-bar-lbl" x="${(x + bw / 2).toFixed(1)}" y="${(Y(v) - 5).toFixed(1)}">${axMoney(v)}</text>`;
+      if (i === 0 || i === n - 1 || yr.year % Math.ceil(n / 6) === 0)
+        xlab += `<text class="vz-axis" x="${(x + bw / 2).toFixed(1)}" y="${H - padB + 18}" text-anchor="middle">Y${yr.year}</text>`;
+    });
+
+    host.innerHTML =
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        <defs><linearGradient id="rbGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${CLR.net}"/>
+          <stop offset="100%" stop-color="${CLR.netSoft}"/>
+        </linearGradient></defs>
+        ${grid}${ax}${xlab}${bars}
+        <line class="vz-guide" x1="0" y1="${padT}" x2="0" y2="${H - padB}" style="opacity:0"/>
+        <rect class="vz-hit" x="${padL}" y="${padT}" width="${pw}" height="${ph}"/>
+      </svg>`;
+
+    const Xc = i => padL + pw * i / n + (pw / n) / 2;
+    attachHover(host, W, padL, pw, n, Xc, (i) => {
+      const yr = yrs[i];
+      return {
+        x: Xc(i), y: Y(vals[i]),
+        html: `<div class="vt-yr">Year ${yr.year}${yr.isLoss ? ' · loss yr' : ''}</div>
+          <div class="vt-row"><i style="background:${CLR.net}"></i>Annual <b>₹${fmtCrL(yr.rebate)}</b></div>
+          <div class="vt-row"><i style="background:${CLR.netSoft}"></i>Monthly <b>₹${fmtINR(yr.monthlyRebate)}</b></div>`
+      };
+    });
+  }
+
+  // ---- Chart 3: corpus / investor / buyer notional (multi-line)
+  function renderCorpusChart(c) {
+    const host = document.getElementById('viz-corpus');
+    const leg = document.getElementById('viz-corpus-legend');
+    if (!host) return;
+    leg.innerHTML =
+      `<span class="lg"><i style="background:${CLR.corpus}"></i>Corpus</span>
+       <span class="lg"><i style="background:${CLR.investor}"></i>Investor</span>
+       <span class="lg"><i style="background:${CLR.buyer}"></i>Buyer</span>`;
+
+    const yrs = c.years, n = yrs.length;
+    const series = {
+      corpus: yrs.map(y => y.corpus),
+      investor: yrs.map(y => y.investor),
+      buyer: yrs.map(y => y.buyer)
+    };
+    const W = 460, H = 240, padL = 52, padR = 14, padT = 16, padB = 30;
+    const pw = W - padL - padR, ph = H - padT - padB;
+    const allMax = Math.max(...series.corpus, ...series.investor, ...series.buyer);
+    const allMin = Math.min(...series.corpus, ...series.investor, ...series.buyer);
+    const yMax = niceTop(allMax * 1.05);
+    const yMin = Math.max(0, Math.floor(allMin / 1e7) * 1e7 - (allMin > 2e7 ? 1e7 : 0));
+    const X = i => padL + (n === 1 ? pw / 2 : pw * i / (n - 1));
+    const Y = v => padT + ph * (1 - (v - yMin) / (yMax - yMin));
+
+    let grid = '', ax = '';
+    for (let g = 0; g <= 4; g++) {
+      const v = yMin + (yMax - yMin) * g / 4, y = Y(v);
+      grid += `<line class="vz-grid" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"/>`;
+      ax += `<text class="vz-axis" x="${padL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end">${axMoney(v)}</text>`;
+    }
+    let xlab = '';
+    yrs.forEach((yr, i) => {
+      if (i === 0 || i === n - 1 || yr.year % Math.ceil(n / 6) === 0)
+        xlab += `<text class="vz-axis" x="${X(i).toFixed(1)}" y="${H - padB + 18}" text-anchor="middle">Y${yr.year}</text>`;
+    });
+    const poly = (arr, clr) =>
+      `<polyline class="vz-line" points="${arr.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" stroke="${clr}"/>`;
+
+    host.innerHTML =
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        ${grid}${ax}${xlab}
+        ${poly(series.investor, CLR.investor)}
+        ${poly(series.buyer, CLR.buyer)}
+        ${poly(series.corpus, CLR.corpus)}
+        <line class="vz-guide" x1="0" y1="${padT}" x2="0" y2="${H - padB}" style="opacity:0"/>
+        <rect class="vz-hit" x="${padL}" y="${padT}" width="${pw}" height="${ph}"/>
+      </svg>`;
+
+    attachHover(host, W, padL, pw, n, X, (i) => {
+      const yr = yrs[i];
+      return {
+        x: X(i), y: Y(series.corpus[i]),
+        html: `<div class="vt-yr">Year ${yr.year}</div>
+          <div class="vt-row"><i style="background:${CLR.corpus}"></i>Corpus <b>₹${fmtCrL(series.corpus[i])}</b></div>
+          <div class="vt-row"><i style="background:${CLR.investor}"></i>Investor <b>₹${fmtCrL(series.investor[i])}</b></div>
+          <div class="vt-row"><i style="background:${CLR.buyer}"></i>Buyer <b>₹${fmtCrL(series.buyer[i])}</b></div>`
+      };
+    });
+  }
+
+  // ---- Chart 4: total cost comparison (HTML bars)
+  function renderCostChart(c) {
+    const host = document.getElementById('viz-cost');
+    const sub = document.getElementById('viz-cost-sub');
+    if (!host) return;
+    const std = c.totalPaidStandard;
+    const save = c.totalSavings;
+    const pay = std - save;
+    const savePct = std > 0 ? Math.round(save / std * 100) : 0;
+    sub.innerHTML = `You save <strong>₹${fmtCrL(save)}</strong> (${savePct}%)`;
+
+    const wStd = 100;
+    const wPay = std > 0 ? (pay / std * 100) : 0;
+    const wSave = std > 0 ? (save / std * 100) : 0;
+
+    host.innerHTML =
+      `<div class="viz-bars2">
+        <div class="viz-bar2-row">
+          <div class="viz-bar2-top">
+            <span class="viz-bar2-name">Standard home loan</span>
+            <span class="viz-bar2-val" style="color:${CLR.bank}">₹${fmtCrL(std)}</span>
+          </div>
+          <div class="viz-bar2-track">
+            <div class="viz-bar2-fill viz-fill-std" style="width:${wStd}%"></div>
+          </div>
+        </div>
+        <div class="viz-bar2-row">
+          <div class="viz-bar2-top">
+            <span class="viz-bar2-name">With BrickReturn™</span>
+            <span class="viz-bar2-val"><span style="color:${CLR.netSoft}">₹${fmtCrL(pay)}</span> <span style="color:${CLR.save}">+ ₹${fmtCrL(save)} back</span></span>
+          </div>
+          <div class="viz-bar2-track">
+            <div class="viz-bar2-fill viz-fill-pay seg" style="width:${wPay.toFixed(1)}%"></div>
+            <div class="viz-bar2-fill viz-fill-save seg" style="width:${wSave.toFixed(1)}%;border-radius:0 8px 8px 0"></div>
+          </div>
+        </div>
+        <div class="viz-bars2-legend">
+          <span class="lg"><i class="viz-fill-pay" style="display:inline-block"></i>What you actually pay</span>
+          <span class="lg"><i class="viz-fill-save" style="display:inline-block"></i>Rebated back to you</span>
+        </div>
+      </div>`;
+  }
+
+  // ---- shared hover behaviour for SVG charts
+  function attachHover(host, W, padL, pw, n, X, infoAt) {
+    const svg = host.querySelector('svg');
+    const hit = host.querySelector('.vz-hit');
+    const guide = host.querySelector('.vz-guide');
+    const tip = makeTip(host);
+    if (!svg || !hit) return;
+
+    const move = (clientX) => {
+      const r = svg.getBoundingClientRect();
+      const vx = (clientX - r.left) / r.width * W;          // into viewBox space
+      let i = Math.round((vx - padL) / pw * (n - 1));
+      i = Math.max(0, Math.min(n - 1, i));
+      const info = infoAt(i);
+      if (guide) { guide.setAttribute('x1', info.x); guide.setAttribute('x2', info.x); guide.style.opacity = '1'; }
+      tip.innerHTML = info.html;
+      tip.style.left = (info.x / W * 100) + '%';
+      tip.style.top = (info.y / 240 * 100) + '%';
+      tip.classList.add('show');
+    };
+    hit.addEventListener('mousemove', e => move(e.clientX));
+    hit.addEventListener('mouseenter', e => move(e.clientX));
+    hit.addEventListener('mouseleave', () => { tip.classList.remove('show'); if (guide) guide.style.opacity = '0'; });
+    hit.addEventListener('touchstart', e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
+    hit.addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
   }
 
   recalc();

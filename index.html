@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BrickReturn™ — India's Homebuyers Pay Too Much. We're Changing That.</title>
-<meta name="description" content="BrickReturn™ uses bulk-purchase arbitrage and market-yield rebates to cut homebuyer EMIs by up to 53% over 12 years — without subsidies." />
+<meta name="description" content="BrickReturn™ uses bulk-purchase arbitrage and market-yield rebates to cut homebuyer EMIs by up to 52% over 12 years — without subsidies." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,15 +19,19 @@
       <span class="logo-mark">B</span>
       <span class="logo-text">BrickReturn<sup>™</sup></span>
     </a>
-    <nav class="nav-links">
+    <nav class="nav-links" id="primary-nav">
       <a href="#problem">The Problem</a>
       <a href="how-it-works.html">How It Works</a>
       <a href="#math">The Math</a>
       <a href="#properties">Properties</a>
       <a href="#stakeholders">Who Benefits</a>
       <a href="#faq">FAQ</a>
+      <a href="#contact" class="nav-cta nav-cta-mobile">Get in Touch</a>
     </nav>
     <a href="#contact" class="nav-cta">Get in Touch</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -41,7 +45,7 @@
       BrickReturn<sup>™</sup> is designed to change that.
     </h1>
     <p class="hero-sub">
-      A new structure for residential home financing — one that uses bulk-purchase arbitrage and disciplined market yields to refund up to <strong>53% of your EMI</strong> over 12 years. No subsidy. No gimmick. Just better-engineered capital.
+      A new structure for residential home financing — one that uses bulk-purchase arbitrage and disciplined market yields to refund up to <strong>52% of your EMI</strong> by year 12. No subsidy. No gimmick. Just better-engineered capital.
     </p>
     <div class="hero-cta-row">
       <a href="#model" class="btn btn-primary">See How It Works</a>
@@ -50,11 +54,11 @@
 
     <div class="hero-stats">
       <div class="stat">
-        <div class="stat-num">₹34.5L</div>
+        <div class="stat-num">₹53.5L</div>
         <div class="stat-label">cumulative rebate per buyer</div>
       </div>
       <div class="stat">
-        <div class="stat-num">53%</div>
+        <div class="stat-num">52%</div>
         <div class="stat-label">EMI relief by year 12</div>
       </div>
       <div class="stat">
@@ -75,7 +79,7 @@
     <div class="section-head">
       <span class="eyebrow">The Problem</span>
       <h2>Three structural traps the system pretends are normal.</h2>
-      <p class="section-lede">On a ₹1 crore home, an Indian buyer pays roughly <strong>₹1,77,88,000</strong> over 12 years — for an asset that appreciates at half the rate of a basic index fund. The math isn't unfortunate. It's the design.</p>
+      <p class="section-lede">On a ₹1 crore home, an Indian buyer pays roughly <strong>₹1,63,88,000</strong> over 12 years — for an asset that appreciates at half the rate of a basic index fund. The math isn't unfortunate. It's the design.</p>
     </div>
 
     <div class="problem-grid">
@@ -128,7 +132,7 @@
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Corpus Assembly</h3>
-          <p>Investors commit ₹40 lakh per unit, earning a <strong>guaranteed 8.5% p.a. coupon for 15 years</strong>. BrickReturn™ acts as the corpus manager.</p>
+          <p>Investors commit <strong>₹1.2 crore per unit</strong> into the corpus, earning a contractual <strong>8.5% p.a. (CAGR)</strong> paid as a single lump sum at maturity. BrickReturn™ acts as the corpus manager.</p>
         </div>
       </li>
       <li class="step">
@@ -149,7 +153,7 @@
         <div class="step-num">4</div>
         <div class="step-body">
           <h3>Corpus Expansion</h3>
-          <p>Sale proceeds (₹1 cr) plus original seed capital (₹40 L) form a <strong>₹1.40 crore investable corpus</strong> per transaction. The system compounds with every unit sold.</p>
+          <p>Investor capital (₹1.2 cr) plus BrickReturn™'s ₹20 L Day-1 arbitrage form a <strong>₹1.40 crore investable corpus</strong> per transaction. The system compounds with every unit sold.</p>
         </div>
       </li>
       <li class="step">
@@ -168,7 +172,7 @@
         <div class="step-num">6</div>
         <div class="step-body">
           <h3>Rebate Distribution</h3>
-          <p>Approximately <strong>2.5% of annual yield is paid monthly</strong> to the homebuyer as a rebate. Investor coupons and company margin are funded from the surplus — never from buyer shortfalls.</p>
+          <p>Approximately <strong>25% of the buyer's annual yield is paid monthly</strong> to the homebuyer as a rebate. Investor coupons and company margin are funded from the surplus — never from buyer shortfalls.</p>
         </div>
       </li>
     </ol>
@@ -184,6 +188,21 @@
       <p class="section-lede">Same ₹1 crore property. Same 9% loan. The difference: a growing monthly rebate that lightens your real outflow every year.</p>
     </div>
 
+    <!-- Visual chart: flat Bank EMI vs declining Net Payment -->
+    <figure class="emi-chart-card">
+      <figcaption class="emi-chart-head">
+        <h3>The widening gap is your saving.</h3>
+        <div class="emi-chart-legend" aria-hidden="true">
+          <span class="lg lg-bank"><i></i>Bank EMI (fixed)</span>
+          <span class="lg lg-net"><i></i>Your net payment</span>
+          <span class="lg lg-rebate"><i></i>Monthly rebate</span>
+        </div>
+      </figcaption>
+      <div id="emi-chart" class="emi-chart" role="img"
+           aria-label="Line chart: the bank EMI stays flat at about ₹1.14 lakh per month for 12 years, while the net payment after the BrickReturn rebate falls steadily to about ₹51,000 by year 12. The shaded area between the two lines is the monthly rebate.">
+      </div>
+    </figure>
+
     <div class="emi-table-wrap">
       <table class="emi-table">
         <thead>
@@ -197,25 +216,25 @@
         </thead>
         <tbody>
           <tr><td>1</td><td>₹1,13,803</td><td class="rebate">−₹20,833</td><td class="net">₹92,970</td><td>18%</td></tr>
-          <tr><td>5</td><td>₹1,13,803</td><td class="rebate">−₹39,502</td><td class="net">₹74,301</td><td>35%</td></tr>
+          <tr><td>5</td><td>₹1,13,803</td><td class="rebate">−₹30,502</td><td class="net">₹83,301</td><td>27%</td></tr>
           <tr><td>8</td><td>₹1,13,803</td><td class="rebate">−₹40,598</td><td class="net">₹73,205</td><td>36%</td></tr>
-          <tr><td>10</td><td>₹1,13,803</td><td class="rebate">−₹45,123</td><td class="net">₹68,680</td><td>40%</td></tr>
-          <tr class="highlight"><td>12</td><td>₹1,13,803</td><td class="rebate">−₹63,000</td><td class="net">₹50,803</td><td><strong>53%</strong></td></tr>
+          <tr><td>10</td><td>₹1,13,803</td><td class="rebate">−₹49,124</td><td class="net">₹64,679</td><td>43%</td></tr>
+          <tr class="highlight"><td>12</td><td>₹1,13,803</td><td class="rebate">−₹59,440</td><td class="net">₹54,363</td><td><strong>52%</strong></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="math-callouts">
       <div class="callout">
-        <div class="callout-num">₹34.5L</div>
+        <div class="callout-num">₹53.5L</div>
         <div class="callout-label">Total cumulative savings over 12 years</div>
       </div>
       <div class="callout">
-        <div class="callout-num">32%</div>
+        <div class="callout-num">33%</div>
         <div class="callout-label">Average EMI reduction across the tenure</div>
       </div>
       <div class="callout">
-        <div class="callout-num">₹50,803</div>
+        <div class="callout-num">₹54,363</div>
         <div class="callout-label">Net monthly payment by year 12</div>
       </div>
     </div>
@@ -317,9 +336,9 @@
         <div class="stake-icon">🏠</div>
         <h3>The Homebuyer</h3>
         <ul>
-          <li>₹34.5 lakh cumulative rebate</li>
-          <li>32% average EMI reduction</li>
-          <li>53% reduction by year 12</li>
+          <li>₹53.5 lakh cumulative rebate</li>
+          <li>33% average EMI reduction</li>
+          <li>52% reduction by year 12</li>
           <li>Wealth preservation alongside ownership</li>
         </ul>
       </article>
@@ -330,7 +349,7 @@
         <ul>
           <li>8.5% guaranteed annual coupon</li>
           <li>Asset-backed security structure</li>
-          <li>15-year predictable horizon</li>
+          <li>12-year predictable horizon</li>
           <li>Systematic, scalable returns</li>
         </ul>
       </article>
