@@ -2679,7 +2679,10 @@ h4 { font-size: 1.1rem; }
 .flow-node-dev { border-left: 4px solid #4a6fa5; }
 .flow-node-dev .flow-tag { background: #e9eff7; color: #2c4670; }
 .flow-node-corpus { border-left: 4px solid var(--ink); background: var(--ink); color: #fff; }
-.flow-node-corpus h4, .flow-node-corpus p { color: #fff; }
+/* higher specificity (.x.y) so these win over the generic .flow-node p/h4 below */
+.flow-node-corpus.flow-node h4 { color: #fff; }
+.flow-node-corpus.flow-node p { color: rgba(255,255,255,.86); }
+.flow-node-corpus.flow-node p strong { color: #fff; }
 .flow-node-corpus .flow-tag { background: rgba(255,255,255,.15); color: var(--brick-soft); }
 .flow-node-corpus .flow-amount { color: var(--brick-soft); }
 .flow-node-buyer { border-left: 4px solid #2f8a4d; }
